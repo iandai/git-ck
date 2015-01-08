@@ -13,8 +13,10 @@ $ (cd /tmp && git clone https://github.com/iandai/git-ck.git && cd git-ck && sud
 
 
 ### Usage
+```
 s                   Show result of git status -s.  
 diff [<number>]     Show result of git diff of the files.  
 ck [<number>]       Checkout the file.  
 exit                Exit.  
 h                   Help.  
+```
