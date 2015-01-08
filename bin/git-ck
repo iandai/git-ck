@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+eval git status -s | awk '{printf "%d\t%s\n", NR, $0}'
+
+while true; do
+
+read -p ">" cmd
+
+	# if diff + number
+	diffRegex='^diff[[:space:]][[:digit:]]+$'
+	ckRegex='^ck[[:space:]][[:digit:]]+$'
+
+	if [[ $cmd =~ $diffRegex ]]; then
+		num=`echo $cmd | cut -d \  -f 2`	 	                      # get input number 
+	  path=`git status -s | awk "NR==$num" | sed 's/^ *//' |  cut -d \  -f 2`  	# get the Nst file path
+		eval git diff $path
+
+	elif [[ $cmd =~ $ckRegex ]]; then
+		num=`echo $cmd | cut -d \  -f 2`	                      	# get input number  
+		path=`git status -s | awk "NR==$num" | sed 's/^ *//' | cut -d \  -f 2`    # get the Nst file path
+		echo "check out $path"
+		eval git checkout $path
+		
+	elif [[ $cmd == "s" ]]; then
+		eval git status -s | awk '{printf "%d\t%s\n", NR, $0}'
+	elif [[ $cmd == "h" ]]; then
+		echo "Usage:
+s                   Show result of git status -s.
+diff [<number>]     Show result of git diff of the files.
+ck [<number>]       Checkout the file.
+exit                Exit.
+h                   Help."
+
+	elif [[ $cmd == "exit" ]]; then
+		break
+	elif [[ $cmd == "" ]]; then
+		continue
+	else
+	  echo "command not found."
+	fi
+
+done
+
+
+
